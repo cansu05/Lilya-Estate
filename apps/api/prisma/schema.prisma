@@ -1,0 +1,103 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model cities {
+  id        Int     @id @default(autoincrement())
+  city_code Int?
+  city_name String? @db.VarChar(20)
+}
+
+model districts {
+  id             Int     @id @default(autoincrement())
+  city_id        Int?
+  districts_name String? @db.VarChar(30)
+}
+
+model listing_photos {
+  id         Int       @id @default(autoincrement())
+  created_at DateTime? @default(now()) @db.Timestamp(6)
+  listing_id Int?
+  url        String    @db.VarChar(250)
+  is_cover   Boolean?
+  listings   listings? @relation(fields: [listing_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model listings {
+  id              Int              @id @default(autoincrement())
+  created_at      DateTime?        @default(now()) @db.Timestamp(6)
+  updated_at      DateTime?        @db.Timestamp(6)
+  listing_number  Int?             @default(autoincrement())
+  title           String           @db.VarChar(150)
+  neighborhood_id Int?
+  price           Decimal          @db.Decimal(12, 2)
+  property_type   property_type
+  listing_type    listing_type
+  net_area        Int
+  building_age    Int
+  floor_number    Int
+  total_floors    Int
+  furnished       Boolean
+  balcony_count   Int
+  has_elevator    Boolean
+  parking         parking_type
+  heating         heating_type
+  latitude        Decimal?         @db.Decimal(9, 6)
+  longitude       Decimal?         @db.Decimal(9, 6)
+  room_type       room_type?
+  listing_photos  listing_photos[]
+  neighborhoods   neighborhoods?   @relation(fields: [neighborhood_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model neighborhoods {
+  id                 Int        @id @default(autoincrement())
+  districts_id       Int?
+  neighborhoods_name String?    @db.VarChar(100)
+  listings           listings[]
+}
+
+enum heating_type {
+  none
+  central
+  combi
+  stove
+  floor_heating
+}
+
+enum listing_type {
+  for_sale
+  for_rent
+}
+
+enum parking_type {
+  none
+  open
+  closed
+}
+
+enum property_type {
+  apartment
+  house
+  villa
+  land
+  office
+  shop
+}
+
+enum room_type {
+  studio
+  one_plus_zero  @map("1+0")
+  one_plus_one   @map("1+1")
+  two_plus_one   @map("2+1")
+  three_plus_one @map("3+1")
+  four_plus_one  @map("4+1")
+  five_plus_one  @map("5+1")
+  six_plus_one   @map("6+1")
+}
+
+
