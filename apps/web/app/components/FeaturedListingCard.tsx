@@ -195,7 +195,7 @@ export default function FeaturedListingCard({
           <Typography
             sx={{ fontSize: 14, color: "text.secondary", fontWeight: 600 }}
           >
-            {net_area} m2
+            {net_area} m²
           </Typography>
         </Box>
       </Box>

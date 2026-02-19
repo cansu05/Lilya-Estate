@@ -59,7 +59,7 @@ export default function ListingDetailsStats({ listing }: ListingDetailsStatsProp
     >
       <Stat icon={<BedOutlinedIcon />} label={`${beds} Beds`} />
       <Stat icon={<BathtubOutlinedIcon />} label={`${bathrooms} Bathrooms`} />
-      <Stat icon={<SquareFootOutlinedIcon />} label={`${listing.net_area} m2`} />
+      <Stat icon={<SquareFootOutlinedIcon />} label={`${listing.net_area} m²`} />
       <Stat icon={<CalendarMonthOutlinedIcon />} label={`${listing.building_age} Years`} />
       <Stat
         icon={<HomeWorkOutlinedIcon />}
