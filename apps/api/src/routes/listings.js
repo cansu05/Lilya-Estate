@@ -93,13 +93,13 @@ router.get("/", async (req, res) => {
         l.longitude,
         lp.url AS cover_photo_url,
         CONCAT(c.city_name, ' / ', d.districts_name, ' / ', n.neighborhoods_name) AS location
-      FROM listings AS l
-      LEFT JOIN listing_photos AS lp
+      FROM public.listings AS l
+      LEFT JOIN public.listing_photos AS lp
         ON lp.listing_id = l.id
        AND lp.is_cover = true
-      JOIN neighborhoods n ON n.id = l.neighborhood_id
-      JOIN districts d ON d.id = n.districts_id
-      LEFT JOIN cities c ON c.city_code = d.city_id
+      JOIN public.neighborhoods n ON n.id = l.neighborhood_id
+      JOIN public.districts d ON d.id = n.districts_id
+      LEFT JOIN public.cities c ON c.city_code = d.city_id
       ${whereClause}
       ORDER BY l.created_at DESC
       LIMIT ${limitParam}
@@ -108,10 +108,10 @@ router.get("/", async (req, res) => {
 
     const countSql = `
       SELECT COUNT(*)::int AS total
-      FROM listings AS l
-      JOIN neighborhoods n ON n.id = l.neighborhood_id
-      JOIN districts d ON d.id = n.districts_id
-      LEFT JOIN cities c ON c.city_code = d.city_id
+      FROM public.listings AS l
+      JOIN public.neighborhoods n ON n.id = l.neighborhood_id
+      JOIN public.districts d ON d.id = n.districts_id
+      LEFT JOIN public.cities c ON c.city_code = d.city_id
       ${whereClause};
     `;
 
@@ -166,10 +166,10 @@ router.get("/:id", async (req, res) => {
         l.latitude,
         l.longitude,
         CONCAT(c.city_name, ' / ', d.districts_name, ' / ', n.neighborhoods_name) AS location
-      FROM listings AS l
-      JOIN neighborhoods n ON n.id = l.neighborhood_id
-      JOIN districts d ON d.id = n.districts_id
-      LEFT JOIN cities c ON c.city_code = d.city_id
+      FROM public.listings AS l
+      JOIN public.neighborhoods n ON n.id = l.neighborhood_id
+      JOIN public.districts d ON d.id = n.districts_id
+      LEFT JOIN public.cities c ON c.city_code = d.city_id
       WHERE l.id = $1
       ORDER BY l.created_at DESC;
     `;
@@ -185,7 +185,7 @@ router.get("/:id", async (req, res) => {
         id,
         url,
         is_cover
-      FROM listing_photos
+      FROM public.listing_photos
       WHERE listing_id = $1
       ORDER BY created_at DESC;
     `;
