@@ -15,6 +15,8 @@ export const metadata: Metadata = {
     "Discover refined living with curated properties, map-based search, and trusted real estate guidance.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function Home() {
   return (
     <Box>
