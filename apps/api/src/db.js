@@ -6,7 +6,7 @@ export const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
   max: Number(process.env.DB_POOL_MAX ?? 10),
   idleTimeoutMillis: Number(process.env.DB_IDLE_TIMEOUT_MS ?? 30000),
-  connectionTimeoutMillis: Number(process.env.DB_CONNECTION_TIMEOUT_MS ?? 15000),
+  connectionTimeoutMillis: Number(process.env.DB_CONNECTION_TIMEOUT_MS ?? 5000),
   allowExitOnIdle: true,
 });
 
@@ -39,7 +39,7 @@ function isRetryableDbError(error) {
 export async function queryWithRetry(
   sql,
   params = [],
-  { retries = 2, initialDelayMs = 250 } = {}
+  { retries = 1, initialDelayMs = 200 } = {}
 ) {
   let attempt = 0;
 
@@ -60,7 +60,7 @@ export async function queryWithRetry(
 
 export async function warmupDatabase() {
   try {
-    await queryWithRetry("SELECT 1;", [], { retries: 3, initialDelayMs: 300 });
+    await queryWithRetry("SELECT 1;", [], { retries: 1, initialDelayMs: 300 });
     return true;
   } catch (error) {
     console.warn("DB warmup failed, continuing startup:", error?.message ?? error);

@@ -7,9 +7,9 @@ import {
   roomTypeOptions,
 } from "@repo/shared";
 import { Box, Button, Paper, TextField, Typography } from "@mui/material";
+import dynamic from "next/dynamic";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
-import MapSearchDialog from "../../components/MapSearchDialog";
 import SelectAutocomplete from "../../components/SelectAutocomplete";
 import { findByInput, useLocationFilters } from "../../components/hooks/useLocationFilters";
 import {
@@ -33,6 +33,10 @@ function toNonNegativeNumber(value?: string) {
 type FiltersProps = {
   initialCityOptions?: LocationOption[];
 };
+
+const MapSearchDialog = dynamic(() => import("../../components/MapSearchDialog"), {
+  ssr: false,
+});
 
 export default function Filters({ initialCityOptions = [] }: FiltersProps) {
   const router = useRouter();
@@ -371,70 +375,72 @@ export default function Filters({ initialCityOptions = [] }: FiltersProps) {
         </Button>
       </Box>
 
-      <MapSearchDialog
-        open={isMapDialogOpen}
-        onClose={() => setIsMapDialogOpen(false)}
-        onSearch={handleMapSearch}
-        isCityLoading={isCityLoading}
-        isDistrictLoading={isDistrictLoading}
-        isNeighborhoodLoading={isNeighborhoodLoading}
-        cityOptions={cityOptions}
-        districtOptions={districtOptions}
-        neighborhoodOptions={neighborhoodOptions}
-        listingTypeOptions={listingTypeOptions}
-        propertyTypeOptions={propertyTypeOptions}
-        roomTypeOptions={roomTypeOptions}
-        selectedCity={selectedCity}
-        cityInput={cityInput}
-        selectedDistrict={selectedDistrict}
-        districtInput={districtInput}
-        selectedNeighborhood={selectedNeighborhood}
-        neighborhoodInput={neighborhoodInput}
-        selectedListingType={selectedListingType}
-        selectedPropertyType={selectedPropertyType}
-        selectedRoomType={selectedRoomType}
-        onLocationChange={(value) => {
-          setCityId(value?.value ?? "");
-          setCityInput(value?.label ?? "");
-          setDistrictId("");
-          setDistrictInput("");
-          setNeighborhoodId("");
-          setNeighborhoodInput("");
-        }}
-        onLocationInputChange={(value) => {
-          setCityInput(value);
-          setCityId("");
-          setDistrictId("");
-          setDistrictInput("");
-          setNeighborhoodId("");
-          setNeighborhoodInput("");
-        }}
-        onDistrictChange={(value) => {
-          setDistrictId(value?.value ?? "");
-          setDistrictInput(value?.label ?? "");
-          setNeighborhoodId("");
-          setNeighborhoodInput("");
-        }}
-        onDistrictInputChange={(value) => {
-          setDistrictInput(value);
-          setDistrictId("");
-          setNeighborhoodId("");
-          setNeighborhoodInput("");
-        }}
-        onNeighborhoodChange={(value) => {
-          setNeighborhoodId(value?.value ?? "");
-          setNeighborhoodInput(value?.label ?? "");
-        }}
-        onNeighborhoodInputChange={(value) => {
-          setNeighborhoodInput(value);
-          setNeighborhoodId("");
-        }}
-        onListingTypeChange={(value) => setListingTypeValue(value?.value ?? "")}
-        onPropertyTypeChange={(value) =>
-          setPropertyTypeValue(value?.value ?? "")
-        }
-        onRoomTypeChange={(value) => setRoomTypeValue(value?.value ?? "")}
-      />
+      {isMapDialogOpen ? (
+        <MapSearchDialog
+          open={isMapDialogOpen}
+          onClose={() => setIsMapDialogOpen(false)}
+          onSearch={handleMapSearch}
+          isCityLoading={isCityLoading}
+          isDistrictLoading={isDistrictLoading}
+          isNeighborhoodLoading={isNeighborhoodLoading}
+          cityOptions={cityOptions}
+          districtOptions={districtOptions}
+          neighborhoodOptions={neighborhoodOptions}
+          listingTypeOptions={listingTypeOptions}
+          propertyTypeOptions={propertyTypeOptions}
+          roomTypeOptions={roomTypeOptions}
+          selectedCity={selectedCity}
+          cityInput={cityInput}
+          selectedDistrict={selectedDistrict}
+          districtInput={districtInput}
+          selectedNeighborhood={selectedNeighborhood}
+          neighborhoodInput={neighborhoodInput}
+          selectedListingType={selectedListingType}
+          selectedPropertyType={selectedPropertyType}
+          selectedRoomType={selectedRoomType}
+          onLocationChange={(value) => {
+            setCityId(value?.value ?? "");
+            setCityInput(value?.label ?? "");
+            setDistrictId("");
+            setDistrictInput("");
+            setNeighborhoodId("");
+            setNeighborhoodInput("");
+          }}
+          onLocationInputChange={(value) => {
+            setCityInput(value);
+            setCityId("");
+            setDistrictId("");
+            setDistrictInput("");
+            setNeighborhoodId("");
+            setNeighborhoodInput("");
+          }}
+          onDistrictChange={(value) => {
+            setDistrictId(value?.value ?? "");
+            setDistrictInput(value?.label ?? "");
+            setNeighborhoodId("");
+            setNeighborhoodInput("");
+          }}
+          onDistrictInputChange={(value) => {
+            setDistrictInput(value);
+            setDistrictId("");
+            setNeighborhoodId("");
+            setNeighborhoodInput("");
+          }}
+          onNeighborhoodChange={(value) => {
+            setNeighborhoodId(value?.value ?? "");
+            setNeighborhoodInput(value?.label ?? "");
+          }}
+          onNeighborhoodInputChange={(value) => {
+            setNeighborhoodInput(value);
+            setNeighborhoodId("");
+          }}
+          onListingTypeChange={(value) => setListingTypeValue(value?.value ?? "")}
+          onPropertyTypeChange={(value) =>
+            setPropertyTypeValue(value?.value ?? "")
+          }
+          onRoomTypeChange={(value) => setRoomTypeValue(value?.value ?? "")}
+        />
+      ) : null}
     </Paper>
   );
 }

@@ -64,6 +64,7 @@ export default function Navbar() {
               fontWeight: 600,
               letterSpacing: 0.6,
               fontSize: 18,
+              textShadow: "0 2px 8px rgba(0,0,0,0.45)",
               transition: "letter-spacing 0.2s ease",
               "&:hover": {
                 letterSpacing: 1.5,
@@ -98,9 +99,10 @@ export default function Navbar() {
               borderRadius: "50%",
               backgroundColor: "rgba(255,255,255,0.2)",
               color: "#fff",
+              border: "1px solid rgba(255,255,255,0.35)",
               backdropFilter: "blur(3px)",
               transition: "background-color 0.3s ease",
-              "&:hover": { backgroundColor: "rgba(255,255,255,0.3)" },
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.34)" },
             }}
             aria-label="Phone"
           >
@@ -115,8 +117,9 @@ export default function Navbar() {
               borderRadius: "50%",
               backgroundColor: "rgba(255,255,255,0.2)",
               color: "#fff",
+              border: "1px solid rgba(255,255,255,0.35)",
               backdropFilter: "blur(3px)",
-              "&:hover": { backgroundColor: "rgba(255,255,255,0.3)" },
+              "&:hover": { backgroundColor: "rgba(255,255,255,0.34)" },
             }}
             aria-label="Open menu"
             onClick={() => setMenuOpen(true)}

@@ -9,6 +9,8 @@ type HeroProps = {
   title?: string;
   subtitle?: string;
   contentOffsetY?: string;
+  priority?: boolean;
+  quality?: number;
 };
 
 export default function Hero({
@@ -19,6 +21,8 @@ export default function Hero({
   title = "Discover Refined Living with Lilya Estate",
   subtitle = "Explore handpicked homes designed for modern life, timeless comfort, and lasting value.",
   contentOffsetY = "0%",
+  priority = false,
+  quality = 72,
 }: HeroProps) {
   return (
     <Box
@@ -32,7 +36,8 @@ export default function Hero({
         src={imageSrc}
         alt={alt}
         fill
-        priority
+        priority={priority}
+        quality={quality}
         style={{ objectFit: "cover" }}
         sizes="100vw"
       />

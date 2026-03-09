@@ -59,8 +59,9 @@ export default function FeaturedListingCard({
           <Image
             src={cover_photo_url}
             alt={title}
-            width={400}
-            height={280}
+            width={700}
+            height={500}
+            quality={68}
             sizes="(max-width: 900px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{
               width: "100%",

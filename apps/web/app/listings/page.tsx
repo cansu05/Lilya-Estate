@@ -62,13 +62,14 @@ export default async function ListingsPage({
   }
 
   return (
-    <Box>
+    <Box component="main">
       <Navbar />
       <Hero
         imageSrc="/assets/estate-hero.jpg"
         height={{ xs: 240, md: 320 }}
         alt="All properties hero"
-        overlayOpacity={0.45}
+        overlayOpacity={0.58}
+        quality={68}
         contentOffsetY="8%"
         title="All Properties"
         subtitle="Browse our curated portfolio and find the right place for your lifestyle."

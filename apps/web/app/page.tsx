@@ -19,12 +19,15 @@ export const dynamic = "force-dynamic";
 
 export default async function Home() {
   return (
-    <Box>
+    <Box component="main">
       <Navbar />
       <Hero
         imageSrc="/assets/estate-hero.jpg"
         height={{ xs: 420, md: 800 }}
         alt="Estate Hero"
+        overlayOpacity={0.55}
+        priority
+        quality={70}
       />
       <Box sx={{ position: "relative", zIndex: 2, mt: { xs: -8, md: -12 } }}>
         <FiltersPanel />

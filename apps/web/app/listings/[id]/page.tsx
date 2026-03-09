@@ -26,13 +26,14 @@ export default async function ListingDetailPage({ params }: ListingDetailPagePro
   }
 
   return (
-    <Box>
+    <Box component="main">
       <Navbar />
       <Hero
         imageSrc="/assets/estate-hero.jpg"
         height={{ xs: 240, md: 320 }}
         alt={listing.title}
-        overlayOpacity={0.45}
+        overlayOpacity={0.62}
+        quality={68}
         contentOffsetY="8%"
         title={listing.title}
         subtitle={listing.location}

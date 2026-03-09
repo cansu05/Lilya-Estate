@@ -39,9 +39,9 @@ export const apiClient = axios.create({
   timeout: apiConfig.timeoutMs,
 });
 
-const RETRYABLE_STATUS_CODES = new Set([408, 425, 429, 500, 502, 503, 504]);
-const MAX_RETRY_COUNT = 2;
-const INITIAL_RETRY_DELAY_MS = 300;
+const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+const MAX_RETRY_COUNT = 1;
+const INITIAL_RETRY_DELAY_MS = 200;
 
 type RetryableRequestConfig = InternalAxiosRequestConfig & {
   __retryCount?: number;
@@ -58,8 +58,10 @@ function shouldRetry(error: AxiosError, retryCount: number): boolean {
   if (method && method !== "GET" && method !== "HEAD") return false;
 
   if (error.code === "ERR_CANCELED") return false;
-  if (error.code === "ECONNABORTED") return true;
-  if (!error.response) return true;
+
+  // Prevent long request chains on cold starts: retry network/timeouts only once.
+  if (error.code === "ECONNABORTED") return retryCount === 0;
+  if (!error.response) return retryCount === 0;
 
   return RETRYABLE_STATUS_CODES.has(error.response.status);
 }

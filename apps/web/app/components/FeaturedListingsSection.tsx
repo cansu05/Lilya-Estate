@@ -78,6 +78,7 @@ export default function FeaturedListingsSection({
             {listings.length > cardsPerPage ? (
               <>
                 <IconButton
+                  aria-label="Show previous listings"
                   onClick={handleBack}
                   disabled={safeStartIndex === 0}
                   sx={{
@@ -95,6 +96,7 @@ export default function FeaturedListingsSection({
                   <KeyboardArrowLeft />
                 </IconButton>
                 <IconButton
+                  aria-label="Show next listings"
                   onClick={handleNext}
                   disabled={safeStartIndex >= maxStartIndex}
                   sx={{
