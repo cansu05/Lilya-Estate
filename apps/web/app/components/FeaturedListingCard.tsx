@@ -10,6 +10,7 @@ import Link from "next/link";
 type FeaturedListingCardProps = {
   listing: ListingItemDto;
   href?: string;
+  priority?: boolean;
 };
 
 function hasValidImageUrl(coverPhotoUrl?: string | null): coverPhotoUrl is string {
@@ -21,6 +22,7 @@ function hasValidImageUrl(coverPhotoUrl?: string | null): coverPhotoUrl is strin
 export default function FeaturedListingCard({
   listing,
   href,
+  priority = false,
 }: FeaturedListingCardProps) {
   const {
     title,
@@ -62,6 +64,7 @@ export default function FeaturedListingCard({
             width={700}
             height={500}
             quality={68}
+            priority={priority}
             sizes="(max-width: 900px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{
               width: "100%",

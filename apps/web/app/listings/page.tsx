@@ -1,11 +1,11 @@
 import { getListings } from "@/api/listings";
 import { Box, Container, Typography } from "@mui/material";
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import { parseListingsFilters } from "@repo/shared";
 import FeaturedListingCard from "../components/FeaturedListingCard";
 import Hero from "../components/Hero";
 import Navbar from "../components/Navbar";
-import Filters from "./_components/Filters";
 import ListingsPagination from "./_components/ListingsPagination";
 
 type ListingsPageProps = {
@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   description:
     "Browse all available properties with city, district, neighborhood, price, and type filters.",
 };
+
+const Filters = dynamic(() => import("./_components/Filters"), {
+  ssr: false,
+});
 
 export default async function ListingsPage({
   searchParams,
@@ -69,6 +73,7 @@ export default async function ListingsPage({
         height={{ xs: 240, md: 320 }}
         alt="All properties hero"
         overlayOpacity={0.58}
+        priority
         quality={68}
         contentOffsetY="8%"
         title="All Properties"
@@ -142,8 +147,8 @@ export default async function ListingsPage({
             gap: 3,
           }}
         >
-          {response.items.map((listing) => (
-            <FeaturedListingCard key={listing.id} listing={listing} />
+          {response.items.map((listing, index) => (
+            <FeaturedListingCard key={listing.id} listing={listing} priority={index < 2} />
           ))}
         </Box>
 
