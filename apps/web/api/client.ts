@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { type AxiosError, type InternalAxiosRequestConfig } from "axios";
 import { apiConfig } from "./config";
 import { ApiError, type ApiErrorCode } from "./types";
 
@@ -39,7 +39,60 @@ export const apiClient = axios.create({
   timeout: apiConfig.timeoutMs,
 });
 
+const RETRYABLE_STATUS_CODES = new Set([408, 425, 429, 500, 502, 503, 504]);
+const MAX_RETRY_COUNT = 2;
+const INITIAL_RETRY_DELAY_MS = 300;
+
+type RetryableRequestConfig = InternalAxiosRequestConfig & {
+  __retryCount?: number;
+};
+
+function sleep(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function shouldRetry(error: AxiosError, retryCount: number): boolean {
+  if (retryCount >= MAX_RETRY_COUNT) return false;
+
+  const method = error.config?.method?.toUpperCase();
+  if (method && method !== "GET" && method !== "HEAD") return false;
+
+  if (error.code === "ERR_CANCELED") return false;
+  if (error.code === "ECONNABORTED") return true;
+  if (!error.response) return true;
+
+  return RETRYABLE_STATUS_CODES.has(error.response.status);
+}
+
+async function retryIfNeeded(error: AxiosError) {
+  const requestConfig = error.config as RetryableRequestConfig | undefined;
+  if (!requestConfig) {
+    throw error;
+  }
+
+  const retryCount = requestConfig.__retryCount ?? 0;
+  if (!shouldRetry(error, retryCount)) {
+    throw error;
+  }
+
+  requestConfig.__retryCount = retryCount + 1;
+  const delayMs = INITIAL_RETRY_DELAY_MS * Math.pow(2, retryCount);
+  await sleep(delayMs);
+
+  return apiClient.request(requestConfig);
+}
+
 apiClient.interceptors.response.use(
   (response) => response,
-  (error) => Promise.reject(normalizeApiError(error))
+  async (error) => {
+    if (axios.isAxiosError(error)) {
+      try {
+        return await retryIfNeeded(error);
+      } catch (finalError) {
+        return Promise.reject(normalizeApiError(finalError));
+      }
+    }
+
+    return Promise.reject(normalizeApiError(error));
+  }
 );

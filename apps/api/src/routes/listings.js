@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { pool } from "../db.js";
+import { queryWithRetry } from "../db.js";
 import { parseIntSafe } from "../utils/validators.js";
 import { parseListingsFilters } from "@repo/shared";
 
@@ -116,8 +116,8 @@ router.get("/", async (req, res) => {
     `;
 
     const [{ rows }, { rows: countRows }] = await Promise.all([
-      pool.query(listSql, values),
-      pool.query(countSql, values.slice(0, values.length - 2)),
+      queryWithRetry(listSql, values),
+      queryWithRetry(countSql, values.slice(0, values.length - 2)),
     ]);
 
     const total = countRows[0]?.total ?? 0;
@@ -174,7 +174,7 @@ router.get("/:id", async (req, res) => {
       ORDER BY l.created_at DESC;
     `;
 
-    const { rows } = await pool.query(listingSql, [listingId]);
+    const { rows } = await queryWithRetry(listingSql, [listingId]);
 
     if (rows.length === 0) {
       return res.status(404).json({ message: "Listing not found" });
@@ -190,7 +190,7 @@ router.get("/:id", async (req, res) => {
       ORDER BY created_at DESC;
     `;
 
-    const { rows: images } = await pool.query(photosSql, [listingId]);
+    const { rows: images } = await queryWithRetry(photosSql, [listingId]);
 
     res.json({
       ...rows[0],

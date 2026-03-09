@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { pool } from "../db.js";
+import { queryWithRetry } from "../db.js";
 import { parseIntSafe } from "../utils/validators.js";
 
 const router = Router();
@@ -12,7 +12,7 @@ router.get("/cities", async (req, res) => {
         FROM cities
         ORDER BY city_name; 
         `;
-    const { rows } = await pool.query(sql);
+    const { rows } = await queryWithRetry(sql);
     res.json(rows);
   } catch (error) {
     console.error("GET /locations/cities error:", error);
@@ -33,7 +33,7 @@ router.get("/districts", async (req, res) => {
     WHERE city_id = $1
     ORDER BY districts_name;
     `;
-    const { rows } = await pool.query(sql, [cityCode]);
+    const { rows } = await queryWithRetry(sql, [cityCode]);
     res.json(rows);
   } catch (error) {
     console.error("GET /locations/districts error:", error);
@@ -55,7 +55,7 @@ router.get("/neighborhoods", async (req, res) => {
         where districts_id = $1
         order by neighborhoods_name;
         `;
-    const { rows } = await pool.query(sql, [districtId]);
+    const { rows } = await queryWithRetry(sql, [districtId]);
     res.json(rows);
   } catch (error) {
     console.error("GET /locations/neighborhoods error:", error);
