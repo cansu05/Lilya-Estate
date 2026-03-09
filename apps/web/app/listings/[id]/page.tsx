@@ -1,16 +1,36 @@
 import { getListingById } from "@/api/listings";
 import { ApiError } from "@/api/types";
-import { Box, Container, Divider, Paper } from "@mui/material";
+import { Box, Container, Divider, Paper, Typography } from "@mui/material";
+import dynamic from "next/dynamic";
 import { notFound } from "next/navigation";
 import Hero from "../../components/Hero";
 import Navbar from "../../components/Navbar";
-import Gallery from "./_components/Gallery";
 import ListingDetailHeader from "./_components/ListingDetailHeader";
 import ListingDetailsStats from "./_components/ListingDetailsStats";
 
 type ListingDetailPageProps = {
   params: Promise<{ id: string }>;
 };
+
+const Gallery = dynamic(() => import("./_components/Gallery"), {
+  ssr: false,
+  loading: () => (
+    <Box
+      sx={{
+        borderRadius: 3,
+        overflow: "hidden",
+        height: { xs: 220, md: 560 },
+        bgcolor: "rgba(15,23,42,0.05)",
+        display: "grid",
+        placeItems: "center",
+      }}
+    >
+      <Typography sx={{ color: "text.secondary", fontWeight: 600 }}>
+        Loading gallery...
+      </Typography>
+    </Box>
+  ),
+});
 
 export default async function ListingDetailPage({ params }: ListingDetailPageProps) {
   const { id } = await params;

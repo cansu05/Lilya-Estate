@@ -1,9 +1,6 @@
 "use client";
 
 import type { ListingPhotoDto } from "@/api/listings";
-import ChevronLeftRoundedIcon from "@mui/icons-material/ChevronLeftRounded";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import { Box, IconButton, Typography } from "@mui/material";
 import Image from "next/image";
 import { useMemo, useState } from "react";
 
@@ -55,25 +52,21 @@ export default function Gallery({ images, title }: GalleryProps) {
     : [];
 
   return (
-    <Box
-      component="section"
-      sx={{
+    <section
+      style={{
         display: "grid",
-        gap: 1,
-        gridTemplateColumns: {
-          xs: "1fr",
-          md: hasSideImages ? "1.45fr 1fr" : "1fr",
-        },
+        gap: 8,
+        gridTemplateColumns: "1fr",
         maxWidth: 1200,
-        mx: "auto",
+        margin: "0 auto",
       }}
     >
-      <Box
-        sx={{
-          borderRadius: 3,
+      <div
+        style={{
+          borderRadius: 24,
           overflow: "hidden",
-          height: { xs: 200, md: 700 },
-          maxHeight: { xs: 220, md: 800 },
+          height: "clamp(220px, 56vw, 560px)",
+          maxHeight: 700,
           position: "relative",
         }}
       >
@@ -83,84 +76,95 @@ export default function Gallery({ images, title }: GalleryProps) {
             alt={title}
             width={1400}
             height={900}
-            sizes="(max-width: 900px) 100vw, 70vw"
+            quality={64}
+            sizes="(max-width: 900px) 100vw, 68vw"
             style={{
               width: "100%",
               height: "100%",
               objectFit: "cover",
               display: "block",
             }}
-            priority
           />
         ) : (
-          <Box
-            sx={{
+          <div
+            style={{
               width: "100%",
               height: "100%",
               display: "grid",
               placeItems: "center",
-              bgcolor: "rgba(15,23,42,0.06)",
+              background: "rgba(15,23,42,0.06)",
             }}
           >
-            <Typography sx={{ color: "text.secondary", fontWeight: 600 }}>
+            <p style={{ color: "#5b6673", fontWeight: 600 }}>
               No image
-            </Typography>
-          </Box>
+            </p>
+          </div>
         )}
 
         {hasSideImages && (
           <>
-            <IconButton
+            <button
+              type="button"
               onClick={handlePrev}
               aria-label="Previous image"
-              sx={{
+              style={{
                 position: "absolute",
                 left: 10,
                 top: "50%",
                 transform: "translateY(-50%)",
-                bgcolor: "rgba(15,23,42,0.44)",
+                background: "rgba(15,23,42,0.44)",
                 color: "#fff",
-                "&:hover": { bgcolor: "rgba(15,23,42,0.64)" },
+                border: "none",
+                borderRadius: 999,
+                width: 40,
+                height: 40,
+                fontSize: 24,
+                lineHeight: "40px",
+                cursor: "pointer",
               }}
             >
-              <ChevronLeftRoundedIcon />
-            </IconButton>
-            <IconButton
+              ‹
+            </button>
+            <button
+              type="button"
               onClick={handleNext}
               aria-label="Next image"
-              sx={{
+              style={{
                 position: "absolute",
                 right: 10,
                 top: "50%",
                 transform: "translateY(-50%)",
-                bgcolor: "rgba(15,23,42,0.44)",
+                background: "rgba(15,23,42,0.44)",
                 color: "#fff",
-                "&:hover": { bgcolor: "rgba(15,23,42,0.64)" },
+                border: "none",
+                borderRadius: 999,
+                width: 40,
+                height: 40,
+                fontSize: 24,
+                lineHeight: "40px",
+                cursor: "pointer",
               }}
             >
-              <ChevronRightRoundedIcon />
-            </IconButton>
+              ›
+            </button>
           </>
         )}
-      </Box>
+      </div>
 
       {hasSideImages && (
-        <Box
-          sx={{
+        <div
+          style={{
             display: "grid",
-            gap: 1,
-            gridTemplateColumns: {
-              xs: "repeat(2, minmax(0,1fr))",
-              md: "repeat(2, minmax(0,1fr))",
-            },
-            gridTemplateRows: { md: "repeat(2, minmax(0,1fr))" },
-            gridAutoRows: { xs: 92 },
-            height: { md: 700 },
-            maxHeight: { md: 800 },
+            gap: 8,
+            gridAutoFlow: "column",
+            gridAutoColumns: "minmax(110px, 180px)",
+            overflowX: "auto",
+            paddingBottom: 4,
           }}
         >
           {sideImages.map((image) => (
-            <Box
+            <button
+              type="button"
               key={image.id}
               onClick={() => {
                 const index = sortedImages.findIndex(
@@ -168,13 +172,15 @@ export default function Gallery({ images, title }: GalleryProps) {
                 );
                 if (index >= 0) setActiveIndex(index);
               }}
-              sx={{
-                borderRadius: 2.2,
+              style={{
+                borderRadius: 18,
                 overflow: "hidden",
                 cursor: "pointer",
                 opacity: 0.95,
                 transition: "opacity 0.2s ease",
-                "&:hover": { opacity: 1 },
+                border: "none",
+                padding: 0,
+                background: "transparent",
               }}
             >
               <Image
@@ -182,6 +188,7 @@ export default function Gallery({ images, title }: GalleryProps) {
                 alt={title}
                 width={800}
                 height={500}
+                quality={56}
                 sizes="(max-width: 900px) 50vw, 15vw"
                 style={{
                   width: "100%",
@@ -190,10 +197,10 @@ export default function Gallery({ images, title }: GalleryProps) {
                   display: "block",
                 }}
               />
-            </Box>
+            </button>
           ))}
-        </Box>
+        </div>
       )}
-    </Box>
+    </section>
   );
 }
